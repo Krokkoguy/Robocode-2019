@@ -1,5 +1,3 @@
-#define SENSOR_POSITIVE 0
-
 struct Chunk{
   /* The width of a chunk */
   unsigned short width;
@@ -12,7 +10,7 @@ struct Chunk{
  * Reduces the output of the sensors to a usable number.
  * Ignores false positives.
  */
-struct Chunk detectChunk( int arr[], const int SIZE ){
+struct Chunk detectChunk( int arr[], const int SIZE, const float THRESHOLD ){
 
   int index = 0;
   int width = 0;
@@ -23,7 +21,7 @@ struct Chunk detectChunk( int arr[], const int SIZE ){
   /* Iterate over sensorArr to find the largest consecutive chunks of positive readings */
   for( int i = 0; i < SIZE; i++ ){
 
-    if( arr[i] == SENSOR_POSITIVE ){
+    if( arr[i] < THRESHOLD  ){
       /* If the width is 0, start a new chunk */
       if( width == 0 ){
         index = i;
@@ -41,7 +39,7 @@ struct Chunk detectChunk( int arr[], const int SIZE ){
     }
   }
 
-  float direction = maxWidth == 0 ? 0.0 : ((maxIndex + (maxWidth/2.0)+1) - (SIZE/2.0)) / (float)SIZE;
+  float direction = maxWidth == 0 ? 0.0 : (maxIndex + (maxWidth/2.0) - (SIZE/2.0)) / (float)SIZE;
 
   return (struct Chunk){maxWidth, direction};
 }
