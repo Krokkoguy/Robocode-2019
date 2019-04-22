@@ -10,7 +10,7 @@ struct Chunk{
  * Reduces the output of the sensors to a usable number.
  * Ignores false positives.
  */
-struct Chunk detectChunk( int arr[], const int SIZE, const float THRESHOLD ){
+struct Chunk detectChunk( int arr[], const int SIZE, const int CONDITION ){
 
   int index = 0;
   int width = 0;
@@ -21,7 +21,7 @@ struct Chunk detectChunk( int arr[], const int SIZE, const float THRESHOLD ){
   /* Iterate over sensorArr to find the largest consecutive chunks of positive readings */
   for( int i = 0; i < SIZE; i++ ){
 
-    if( arr[i] < THRESHOLD  ){
+    if( arr[i] == CONDITION  ){
       /* If the width is 0, start a new chunk */
       if( width == 0 ){
         index = i;
