@@ -1,184 +1,106 @@
-void driveFollowLineTicks(int tics)
-{
-	resetEncoders();
-	int i;
-	tick = 0;
-	while (getEncoder(AVERAGE) < tics)
-	{
-		i = followLineLoop(0.2);
-		if (!i)
-		{	// Mistet strek
-			stop();
-			LCDPrintf("Mistet strek - dFLTicks");
-			break;
-		}
+#include <stdlib.h>
+
+/* Checks if mask is unchanged if applied to n. */
+int testMask( int n, int mask ){
+	return ( n & mask) == mask;
+}
+
+/* Follows a line. */
+int driveFollowLine(int ticks, float speed){
+
+  /* Save encoder data to virtually reset the encoder.
+   * (actually resettting the encoder will not change how this function performs.) */
+	int enc = getEncoder(AVERAGE);
+
+  /* Init the return code */
+  int rCode = 1;
+
+	while( rCode && (abs(enc - getEncoder(AVERAGE)) < ticks) ) {
+		rCode = followLineLoop( speed );
 	}
+
+  if(rCode) LCDPrintf("Stoppet på ticks - dFL\n\r");
+  else      LCDPrintf("Mistet strek - dFL\n\r");
+
+  stop();
+  return rCode;
+}
+
+/* Drives forward. */
+void drive( int ticks, float speed, float direction ){
+
+  /* Pick which encoder to check. */
+	int d                 = AVERAGE;
+	if( d < 0.0f ) d      = LEFT;
+	else if( d > 0.0f ) d = RIGHT;
+
+	int enc = getEncoder( d );
+
+  driveRaw( speed, direction );
+	while( abs(enc - getEncoder( d )) < ticks );
+
+	LCDPrintf("Stoppet på ticks - d\n\r");
+
 	stop();
 }
 
-void driveFollowLineTicksSlow(int tics)
-{
-	resetEncoders();
-	int i;
-	tick = 0;
-	while (getEncoder(AVERAGE) < tics)
-	{
-		i = followLineLoop(0.15);
-		if (!i)
-		{	// Mistet strek
-			stop();
-			LCDPrintf("Mistet strek - dFLTSlow");
-			break;
-		}
-	}
-	stop();
-}
+/* Follows a line until a crossing. */
+int driveToCross(int ticks, float speed, int retning ){
 
-void driveFollowLineTicksFast(int tics)
-{
-	resetEncoders();
-	int i;
-	tick = 0;
-	while (getEncoder(AVERAGE) < tics)
-	{
-		i = followLineLoop(0.3);
-		if (!i)
-		{	// Mistet strek
-			stop();
-			LCDPrintf("Mistet strek - dFLTSlow");
-			break;
-		}
-	}
-	stop();
-}
-
-void driveFollowLineTicksTrapp(int tics)
-{
-	resetEncoders();
-	int i;
-	tick = 0;
-	while (getEncoder(AVERAGE) < tics)
-	{
-		i = followLineLoop(0.15);
-		if (!i)
-		{	// Mistet strek
-			//stop();
-			LCDPrintf("Mistet strek - Trapp");
-			tick = 0;
-			//break;
-		}
-	}
-	stop();
-}
-
-
-void driveToCross(int retning, int tics)
-{
-	//LCDPrintf("%d", OSReadInLatch(0));
+  /* Set the mask to find the cross */
+  int mask = 0x7e; //01111110
 	if (retning == LEFT)
-		retning = 135; //248;
+		mask = 0x78;   //01111000
 	else if (retning == RIGHT)
-		retning = 240; //15;
-	else
-		retning = 128;
-		
-	resetEncoders();
-	int i;
-	while (getEncoder(AVERAGE) < tics && OSReadInLatch(0) != retning)
-	{
-		readIRLine();
-		i = followLineLoop(0.2);
-		if (!i)
-		{	// Mistet strek
-			stop();
-			LCDPrintf("Mistet strek - dTCross");
-			break;
-		}
+		mask = 0x1e;   //00011110
+
+  int enc = getEncoder(AVERAGE);
+  int rCode = 1;
+
+	while( rCode && (abs(enc - getEncoder(AVERAGE)) < ticks) && testMask( ~OSReadInLatch(0), mask ) ) {
+		rCode = followLineLoop( speed );
 	}
-	stop();
-	if (getEncoder(AVERAGE) >= tics)
-		LCDPrintf("\r\n Stoppet på tics");
-	else
-		LCDPrintf("\r\n Cross");
+
+  if(rCode) LCDPrintf("Stoppet på ticks - dTC\n\r");
+  else      LCDPrintf("Mistet strek - dTC\n\r");
+
+  stop();
+  return rCode;
 }
 
-void driveToLine(int tics)
+/* Drives forward until a line has been found. */
+int driveToLine(int ticks, float speed) {
+
+  int enc = getEncoder(AVERAGE);
+  int rCode = 0;
+
+  driveRaw( speed, 0 );
+	while ( (!rCode) && (abs(enc - getEncoder(AVERAGE)) < ticks) ){
+    rCode = testMask( ~OSReadInLatch(0), 0x18 );
+	}
+
+  if( rCode ) LCDPrintf("Line detected - dTL\n\r");
+  else        LCDPrintf("Stoppet på ticks - dTL\n\r");
+
+	stop();
+  return rCode;
+}
+
+void turnToDistance(int sensor, int value)
 {
-	resetEncoders();
-	robotSpeed = 0.2;
-	robotTurn = 0;
+	int last = getDistance(sensor);
+	LCDPrintf("\r\n%d", last);
+	robotTurn = 0.20f;
+	robotSpeed = 0.0f;
 	driveRaw(robotSpeed, robotTurn);
-	while (getEncoder(AVERAGE) < tics)
+	while((last < value) || (last > (value + 100)))
 	{
-		readIRLine();
-		
-		if (!binlys[3] && !binlys[4])
-		{
-			LCDPrintf("Line");
-			stop();
-			break;
-		}
+		last = getDistance(sensor);
+		LCDPrintf("\r\n%d", last);
 	}
 	stop();
 }
 
-
-void fram(int tics)
-{
-	resetEncoders();
-	robotSpeed = 0.2f;
-	robotTurn = 0.0f;
-	driveRaw(robotSpeed, robotTurn);		
-	while (getEncoder(AVERAGE) < tics) {;}
-	stop();
+void turn( int ticks, float direction ){
+  drive( ticks, 0.0f, direction );
 }
-
-void rygg(int tics)
-{
-	resetEncoders();
-	robotSpeed = -0.15f;
-	robotTurn = 0.0f;
-	driveRaw(robotSpeed, robotTurn);		
-	while (getEncoder(AVERAGE) > -tics) {;}
-	stop();
-}
-
-void turn(int side, int tics)
-{
-	stop();
-	resetEncoders();
-	robotSpeed = 0.0;
-	if (side == LEFT)
-	{
-		robotTurn = -0.3f;
-		driveRaw(robotSpeed, robotTurn);		
-		while (getEncoder(side) > -tics) {;}
-	}
-	else
-	{
-		robotTurn = 0.3f;
-		driveRaw(robotSpeed, robotTurn);		
-		while (getEncoder(side) > -tics) {;}
-	}
-	stop();
-}
-
-/*
-void safeLostLine()
-{
-	// Rygg uten å resette enkoder
-	int j = getEncoder(AVERAGE);
-	robotSpeed = -0.15f;
-	robotTurn = 0.0f;
-	driveRaw(robotSpeed, robotTurn);
-	while ((getEncoder(AVERAGE) - j) > -3000) 
-	{
-		; // rygg til strek funnet
-	}
-	stop();
-	// se etter strek
-	// hvis strek fortsett
-	// hvis ikke selfdestruct
-}
-*/
-

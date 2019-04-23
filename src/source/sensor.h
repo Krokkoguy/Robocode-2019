@@ -1,7 +1,3 @@
-#include "eyebot.h"
-#include <stdlib.h>
-#include <stdio.h>
-
 struct Chunk{
   /* The width of a chunk */
   unsigned short width;
@@ -23,7 +19,8 @@ struct Chunk detectLargestChunk( int arr[], const int SIZE, const int CONDITION 
   int maxWidth = 0;
 
   /* Iterate over sensorArr to find the largest consecutive chunks of positive readings */
-  for( int i = 0; i < SIZE; i++ ){
+  int i;
+  for( i = 0; i < SIZE; i++ ){
 
     if( arr[i] == CONDITION  ){
       /* If the width is 0, start a new chunk */
