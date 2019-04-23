@@ -1,3 +1,7 @@
+#include "eyebot.h"
+#include <stdlib.h>
+#include <stdio.h>
+
 struct Chunk{
   /* The width of a chunk */
   unsigned short width;
@@ -10,7 +14,7 @@ struct Chunk{
  * Reduces the output of the sensors to a usable number.
  * Ignores false positives.
  */
-struct Chunk detectChunk( int arr[], const int SIZE, const int CONDITION ){
+struct Chunk detectLargestChunk( int arr[], const int SIZE, const int CONDITION ){
 
   int index = 0;
   int width = 0;
@@ -43,3 +47,14 @@ struct Chunk detectChunk( int arr[], const int SIZE, const int CONDITION ){
 
   return (struct Chunk){maxWidth, direction};
 }
+
+/* Calculates the position of the largest chunks relative to the center of an image. */
+/*float calcTurnFromImage( image img, const int CONDITION ){
+	int count = 0;
+  float sum = 0;
+	for (int i = 0; i < 3; i++)
+	{
+    sum += detectLargestChunk( img[i], 60, CONDITION ).direction;
+	}
+  return sum / 3;
+}*/
