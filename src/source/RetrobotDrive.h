@@ -19,41 +19,22 @@ void driveFollowLine( int ticks, float speed ){
 }
 
 /* Deprecated */
-void driveFollowLineTicks(int tics)
-{
-	driveFollowLine( tics, 0.2 );
+void driveFollowLineTicks( int ticks ) {
+	driveFollowLine( ticks, 0.2 );
 }
 
 /* Deprecated */
-void driveFollowLineTicksSlow(int tics)
-{
-	driveFollowLine( tics, 0.15 );
+void driveFollowLineTicksSlow( int ticks ) {
+	driveFollowLine( ticks, 0.15 );
 }
 
 /* Deprecated */
-void driveFollowLineTicksFast(int tics)
-{
-	driveFollowLine( tics, 0.3 );
+void driveFollowLineTicksFast( int ticks ) {
+	driveFollowLine( ticks, 0.3 );
 }
 
-void driveFollowLineTicksTrapp(int tics)
-{
-	_driveFollowLine( tics, 0.15, 0 );
-	// resetEncoders();
-	// int i;
-	// tick = 0;
-	// while (getEncoder(AVERAGE) < tics)
-	// {
-	// 	i = followLineLoop(0.15);
-	// 	if (!i)
-	// 	{	// Mistet strek
-	// 		//stop();
-	// 		LCDPrintf("Mistet strek - Trapp");
-	// 		tick = 0;
-	// 		//break;
-	// 	}
-	// }
-	// stop();
+void driveFollowLineTicksTrapp( int ticks ) {
+	_driveFollowLine( ticks, 0.15, 0 );
 }
 
 
@@ -110,48 +91,20 @@ void driveBlind( int ticks, float speed ){
 	stop();
 }
 
-void fram(int tics)
-{
+void fram(int tics){
 	driveBlind( tics, 0.2f );
-	// resetEncoders();
-	// robotSpeed = 0.2f;
-	// robotTurn = 0.0f;
-	// driveRaw(robotSpeed, robotTurn);
-	// while (getEncoder(AVERAGE) < tics) {;}
-	// stop();
 }
 
-void framFast(int tics)
-{
+void framFast(int tics){
 	driveBlind( tics, 0.25f );
-	// resetEncoders();
-	// robotSpeed = 0.25f;
-	// robotTurn = 0.0f;
-	// driveRaw(robotSpeed, robotTurn);
-	// while (getEncoder(AVERAGE) < tics) {;}
-	// stop();
 }
 
-void rygg(int tics)
-{
+void rygg(int tics){
 	driveBlind( tics, -0.15f );
-	// resetEncoders();
-	// robotSpeed = -0.15f;
-	// robotTurn = 0.0f;
-	// driveRaw(robotSpeed, robotTurn);
-	// while (getEncoder(AVERAGE) > -tics) {;}
-	// stop();
 }
 
-void ryggFast(int tics)
-{
+void ryggFast(int tics){
 	driveBlind( tics, -0.25f );
-	// resetEncoders();
-	// robotSpeed = -0.25f;
-	// robotTurn = 0.0f;
-	// driveRaw(robotSpeed, robotTurn);
-	// while (getEncoder(AVERAGE) > -tics) {;}
-	// stop();
 }
 
 void turn(int side, int tics)
