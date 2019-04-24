@@ -1,95 +1,186 @@
-#define SLOW 0.15f
-#define REGULAR_SPEED 0.20f
-#define FAST 0.30f
-#define STILL 0.0f
-
-#define TURN_LEFT -0.30f
-#define TURN_RIGHT 0.30f
-#define NO_TURN 0.0f
-
-#define MCYCLE 1000
-
-
 void taskGylotin()
 {
-  resetEncoders();
 	LCDPrintf("\r\n Gylotin");
-	driveFollowLine( 200 * MCYCLE, REGULAR_SPEED           );	// litt forbi gylotin
-	driveFollowLine( 100 * MCYCLE, REGULAR_SPEED           );	// litt opp rampe
+	driveFollowLineTicks(190000);	// litt forbi gylotin
+	driveFollowLineTicksSlow(95000);	// litt opp rampe
+	driveFollowLineTicks(40000);
 }
 
 void taskVippeport()
 {
-  resetEncoders();
 	LCDPrintf("\r\n Vippeport");
-  driveToCross   ( 200 * MCYCLE, REGULAR_SPEED, LEFT     );
-	// //sving til vippeport og kjør ned
-	drive          ( 5   * MCYCLE, REGULAR_SPEED, NO_TURN  );
-	turn           ( 10  * MCYCLE, TURN_LEFT               );
-	driveFollowLine( 103 * MCYCLE, SLOW                    );
-	drive          ( 2   * MCYCLE, -SLOW,         NO_TURN  );
-	// // kjør i blinde til strek foran trapp
+
+	driveToCross(LEFT, 150000);
+	//sving til vippeport og kjør ned
+	fram(5000);
+	turn(LEFT, 10000);	//4300
+	driveFollowLineTicksSlow(125000);
+	//rygg(2000);
+	
+	driveRaw(-0.15, 0.0f);
+	OSWait(70);
+	
+	// kjør i blinde til strek foran trapp
+	//OSWait(100);
+	fram(16000);
+	turn(RIGHT, 8700);
+	fram(40000);
+	//OSWait(100);
+
+	
+	driveToLine(15000);
+	// ved strek, sving venstre og følg til neste kryss
+	fram(1000);
+	turn(LEFT, 8000);
+	
+	driveRaw(-0.15, 0.0f);
+	OSWait(170);
+	
+	//driveFollowLineTicks(15000);
+	fram(15000);
+	//OSWait(100);
+	
+	driveRaw(0.25f, 0.15f);
+	OSWait(210); //215
+	stop();
+	//OSWait(100);
+	fram(4000); //5000
+	//OSWait(100);
+	driveToLine(15000);
+	//fram(1000);
+	turn(RIGHT, 1000);
+	//OSWait(100);
+	
+/*	
+	driveToCross(FRONT, 20000);
+	fram(3000);
 	OSWait(100);
-	drive          ( 10  * MCYCLE, REGULAR_SPEED, NO_TURN  );
-	turn           ( 8.8 * MCYCLE, TURN_RIGHT              );
-	drive          ( 40  * MCYCLE, REGULAR_SPEED, NO_TURN  );
+	turn(RIGHT, 9700);
 	OSWait(100);
-
-  driveToLine    ( 15  * MCYCLE, REGULAR_SPEED           );
-	// // ved strek, sving venstre og følg til neste kryss
-	drive          ( 1   * MCYCLE, REGULAR_SPEED, NO_TURN  );
-	turn           ( 8   * MCYCLE, TURN_LEFT               );
-  driveRaw(-0.15, 0.0f);
-  OSWait(170);
-
-  drive          ( 15  * MCYCLE, REGULAR_SPEED, NO_TURN  );
-  driveRaw(0.25f, 0.15f);
-  //drive( 22 * MCYCLE, 0.25f, 0.15f );
-  OSWait(220);
-  stop();
-
-  drive          ( 3   * MCYCLE, REGULAR_SPEED, NO_TURN  );
-  turn           ( 1   * MCYCLE, TURN_RIGHT              );
+	*/
 }
 
 void taskOpprampe()
 {
-  resetEncoders();
 	LCDPrintf("\r\n Opp rampe");
-  driveFollowLine( 110 * MCYCLE, FAST                    );
-	driveFollowLine( 40  * MCYCLE, SLOW                    );
-	turn           ( 4   * MCYCLE, TURN_RIGHT              );
-	drive          ( 5   * MCYCLE, REGULAR_SPEED, NO_TURN  );
-	driveToLine    ( 10  * MCYCLE, REGULAR_SPEED           );
-	turn           ( 6.7 * MCYCLE, TURN_RIGHT              );
+	driveFollowLineTicksFast(117000);	// opp til rampe 
+
+	driveFollowLineTicksSlow(40000);
+	//OSWait(100);
+	turn(RIGHT, 4000);
+	fram(5000);
+	driveToLine(10000);
+	//rygg(1000);
+	turn(RIGHT, 6700);
 
 	LCDPrintf("\r\n ned trapp");
-	driveFollowLine( 35 * MCYCLE,  SLOW                    );
+	driveFollowLineTicksTrapp(35000);
 	driveRaw(-0.2, 0.0f);
 	OSWait(50);
-
-  int i;
-  for( i = 0; i < 4; i++ ){
-    driveFollowLine( 22 * MCYCLE, SLOW                   );
-    driveRaw( -0.2, 0.0f );
-  	OSWait(50);
-  }
-  driveFollowLine( 40 * MCYCLE, SLOW                     );
+	driveFollowLineTicksTrapp(22000);
+	driveRaw(-0.2, 0.0f);
+	OSWait(50);
+	driveFollowLineTicksTrapp(22000);
+	driveRaw(-0.2, 0.0f);
+	OSWait(50);
+	driveFollowLineTicksTrapp(22000);
+	driveRaw(-0.2, 0.0f);
+	OSWait(50);
+	driveFollowLineTicksTrapp(22000);
+	driveRaw(-0.2, 0.0f);
+	OSWait(50);
+	
+	
+	
 }
 
 void taskTrapptilMal()
 {
-	driveFollowLine( 42 * MCYCLE, SLOW                     );
+	
+	driveFollowLineTicksSlow(42000);
+	stop();
 	OSWait(100);
-
-  turn           ( 8   * MCYCLE, TURN_RIGHT              );
-	drive          ( 30  * MCYCLE, REGULAR_SPEED, NO_TURN  );
+	//driveToCross(LEFT, 10000);
+	//stop();
+	//OSWait(100);
+	turn(RIGHT, 8000);
+	fram(30000);
 	OSWait(100);
-
 	turnToDistance(FRONT, 200);
 	OSWait(100);
-
-	drive          ( 50 * MCYCLE, REGULAR_SPEED,  NO_TURN  );
-
-
+	fram(50000);
+	
+	
 }
+
+/*
+void taskOpptrapp()
+{
+//	armDown();
+//	OSWait(100);
+	driveRaw(-0.5f, 0.0f);	
+	OSWait(100);
+	armDown();
+	OSWait(100);
+}
+*/
+
+void taskOksport()
+{
+	
+	driveFollowLineTicksSlow(42000);
+	stop();
+	OSWait(100);
+	//driveToCross(LEFT, 10000);
+	//stop();
+	//OSWait(100);
+	turn(RIGHT, 8000);
+	fram(30000);
+	OSWait(100);
+	turn(LEFT, 7300);
+	//turnToDistanceLeft(FRONT, 350);
+	//OSWait(100);
+	//turn(LEFT, 3000);
+	fram(14000);
+	stop();
+	OSWait(100);
+
+	//ved oks
+	int i = 0;
+	while(i < 10)
+	{
+		if (getDistance(FRONT) > 200) 
+			i++;
+		else
+			i=0;
+	}
+	
+	i=0;
+	while(i < 10)
+	{
+		if (getDistance(FRONT) < 100) 
+			i++;
+		else
+			i=0;
+	}
+	
+		
+	framFast(20000);
+	
+	stop();
+	OSWait(300);
+	
+	ryggFast(35000);
+	stop();
+	
+	
+	turn(RIGHT, 10000);
+	//fram(30000);
+	OSWait(100);
+	turnToDistance(FRONT, 200);
+	OSWait(100);
+	fram(50000);
+	
+}
+
+
