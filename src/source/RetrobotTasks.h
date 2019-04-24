@@ -206,7 +206,7 @@ void taskHodor(){
 			i++;
 		}
 		else
-			i=1337 //Bryt løkka. Antar at vi er nære nok.
+			i=1337; //Bryt løkka. Antar at vi er nære nok.
 	}
 
 	//ved port?
