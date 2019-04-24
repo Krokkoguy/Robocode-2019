@@ -51,7 +51,6 @@ void driveToCross(int retning, int tics)
 		i = followLineLoop(0.2);
 		if (!i)
 		{	// Mistet strek
-			stop();
 			LCDPrintf("Mistet strek - dTCross");
 			break;
 		}
