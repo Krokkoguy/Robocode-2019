@@ -15,24 +15,6 @@ void driveFollowLine( int ticks, float speed ){
 	stop();
 }
 
-/* Deprecated */
-void driveFollowLineTicks(int tics)
-{
-	driveFollowLine( tics, 0.2 );
-}
-
-/* Deprecated */
-void driveFollowLineTicksSlow(int tics)
-{
-	driveFollowLine( tics, 0.15 );
-}
-
-/* Deprecated */
-void driveFollowLineTicksFast(int tics)
-{
-	driveFollowLine( tics, 0.3 );
-}
-
 void driveFollowLineTicksTrapp(int tics)
 {
 	resetEncoders();
