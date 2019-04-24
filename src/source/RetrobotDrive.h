@@ -8,67 +8,29 @@ void driveFollowLine( int ticks, float speed ){
 		if (!i)
 		{	// Mistet strek
 			stop();
-			LCDPrintf("Mistet strek - dFLTicks");
+			LCDPrintf("Mistet strek - dFLT");
 			break;
 		}
 	}
 	stop();
 }
+
+/* Deprecated */
 void driveFollowLineTicks(int tics)
 {
 	driveFollowLine( tics, 0.2 );
-	// resetEncoders();
-	// int i;
-	// tick = 0;
-	// while (getEncoder(AVERAGE) < tics)
-	// {
-	// 	i = followLineLoop(0.2);
-	// 	if (!i)
-	// 	{	// Mistet strek
-	// 		stop();
-	// 		LCDPrintf("Mistet strek - dFLTicks");
-	// 		break;
-	// 	}
-	// }
-	// stop();
 }
 
+/* Deprecated */
 void driveFollowLineTicksSlow(int tics)
 {
 	driveFollowLine( tics, 0.15 );
-	// resetEncoders();
-	// int i;
-	// tick = 0;
-	// while (getEncoder(AVERAGE) < tics)
-	// {
-	// 	i = followLineLoop(0.15);
-	// 	if (!i)
-	// 	{	// Mistet strek
-	// 		stop();
-	// 		LCDPrintf("Mistet strek - dFLTSlow");
-	// 		break;
-	// 	}
-	// }
-	// stop();
 }
 
+/* Deprecated */
 void driveFollowLineTicksFast(int tics)
 {
 	driveFollowLine( tics, 0.3 );
-	// resetEncoders();
-	// int i;
-	// tick = 0;
-	// while (getEncoder(AVERAGE) < tics)
-	// {
-	// 	i = followLineLoop(0.3);
-	// 	if (!i)
-	// 	{	// Mistet strek
-	// 		stop();
-	// 		LCDPrintf("Mistet strek - dFLTSlow");
-	// 		break;
-	// 	}
-	// }
-	// stop();
 }
 
 void driveFollowLineTicksTrapp(int tics)

@@ -1,9 +1,13 @@
+#define SPEED_FAST 0.3
+#define SPEED_NORMAL 0.2
+#define SPEED_SLOW 0.15
+
 void taskGylotin()
 {
 	LCDPrintf("\r\n Gylotin");
-	driveFollowLineTicks(190000);	// litt forbi gylotin
-	driveFollowLineTicksSlow(95000);	// litt opp rampe
-	driveFollowLineTicks(40000);
+	driveFollowLine(190000, SPEED_NORMAL);	// litt forbi gylotin
+	driveFollowLine(95000, SPEED_SLOW);	// litt opp rampe
+	driveFollowLine(40000, SPEED_NORMAL);
 }
 
 void taskVippeport()
@@ -14,7 +18,7 @@ void taskVippeport()
 	//sving til vippeport og kjør ned
 	fram(5000);
 	turn(LEFT, 10000);	//4300
-	driveFollowLineTicksSlow(125000);
+	driveFollowLine(125000, SPEED_SLOW);
 	//rygg(2000);
 	
 	driveRaw(-0.15, 0.0f);
@@ -35,8 +39,8 @@ void taskVippeport()
 	
 	driveRaw(-0.15, 0.0f);
 	OSWait(170);
-	
-	//driveFollowLineTicks(15000);
+
+	//driveFollowLine(15000, SPEED_NORMAL);
 	fram(15000);
 	//OSWait(100);
 	
@@ -63,9 +67,9 @@ void taskVippeport()
 void taskOpprampe()
 {
 	LCDPrintf("\r\n Opp rampe");
-	driveFollowLineTicksFast(117000);	// opp til rampe 
+	driveFollowLine(117000, SPEED_FAST);	// opp til rampe
 
-	driveFollowLineTicksSlow(40000);
+	driveFollowLine(40000, SPEED_SLOW);
 	//OSWait(100);
 	turn(RIGHT, 4000);
 	fram(5000);
@@ -97,7 +101,7 @@ void taskOpprampe()
 void taskTrapptilMal()
 {
 	
-	driveFollowLineTicksSlow(42000);
+	driveFollowLine(42000, SPEED_SLOW);
 	stop();
 	OSWait(100);
 	//driveToCross(LEFT, 10000);
@@ -128,7 +132,7 @@ void taskOpptrapp()
 void taskOksport()
 {
 	
-	driveFollowLineTicksSlow(42000);
+	driveFollowLine(42000, SPEED_SLOW);
 	stop();
 	OSWait(100);
 	//driveToCross(LEFT, 10000);
