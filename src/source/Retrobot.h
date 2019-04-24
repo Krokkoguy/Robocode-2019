@@ -88,23 +88,8 @@ void driveRaw(float speed, float turn)
 
 void dig2bin(int dig)
 {
-	// int i, rest;
-	// int dele = dig;
-	// for (i=0;i<8;i++)
-	// 	binlys[i] = 0;
-	//
-	// i=0;
-	// while (dele > 0 && i<8)
-	// {
-	// 	rest = dele % 2;
-	// 	binlys[i] = rest;
-	// 	i++;
-	// 	dele = dele / 2;
-	// }
-
 	for( int i = 0; i < 8; i++ ){
-		binlys[i] = dig & 0x01;
-		dig >>= 1;
+		binlys[i] = (dig >> i) & 0x01;
 	}
 }
 
