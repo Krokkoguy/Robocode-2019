@@ -7,7 +7,6 @@ void driveFollowLine( int ticks, float speed ){
 		i = followLineLoop(speed);
 		if (!i)
 		{	// Mistet strek
-			stop();
 			LCDPrintf("Mistet strek - dFLT");
 			break;
 		}
@@ -49,7 +48,6 @@ void driveToCross(int retning, int tics)
 	int i;
 	while (getEncoder(AVERAGE) < tics && !(((~OSReadInLatch(0)) & retning) == retning))
 	{
-		readIRLine();
 		i = followLineLoop(0.2);
 		if (!i)
 		{	// Mistet strek
