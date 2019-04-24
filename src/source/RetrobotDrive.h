@@ -1,4 +1,4 @@
-void driveFollowLine( int ticks, float speed ){
+void _driveFollowLine( int ticks, float speed, int breakCondition ){
 	resetEncoders();
 	int i;
 	tick = 0;
@@ -7,11 +7,15 @@ void driveFollowLine( int ticks, float speed ){
 		i = followLineLoop(speed);
 		if (!i)
 		{	// Mistet strek
-			LCDPrintf("Mistet strek - dFLT");
-			break;
+			LCDPrintf("Mistet strek - _dFLT");
+			if( breakCondition ) break;
 		}
 	}
 	stop();
+}
+
+void driveFollowLine( int ticks, float speed ){
+	_driveFollowLine( ticks, speed, 1 );
 }
 
 /* Deprecated */
@@ -34,21 +38,22 @@ void driveFollowLineTicksFast(int tics)
 
 void driveFollowLineTicksTrapp(int tics)
 {
-	resetEncoders();
-	int i;
-	tick = 0;
-	while (getEncoder(AVERAGE) < tics)
-	{
-		i = followLineLoop(0.15);
-		if (!i)
-		{	// Mistet strek
-			//stop();
-			LCDPrintf("Mistet strek - Trapp");
-			tick = 0;
-			//break;
-		}
-	}
-	stop();
+	_driveFollowLine( tics, 0.15, 0 );
+	// resetEncoders();
+	// int i;
+	// tick = 0;
+	// while (getEncoder(AVERAGE) < tics)
+	// {
+	// 	i = followLineLoop(0.15);
+	// 	if (!i)
+	// 	{	// Mistet strek
+	// 		//stop();
+	// 		LCDPrintf("Mistet strek - Trapp");
+	// 		tick = 0;
+	// 		//break;
+	// 	}
+	// }
+	// stop();
 }
 
 
@@ -88,57 +93,65 @@ void driveToLine(int tics)
 	driveRaw(robotSpeed, robotTurn);
 	while (getEncoder(AVERAGE) < tics)
 	{
-		readIRLine();
 
 		if (((~OSReadInLatch(0)) & 0x3c) > 0 ) //!binlys[3] && !binlys[4]
 		{
 			LCDPrintf("Line");
-			stop();
 			break;
 		}
 	}
 	stop();
 }
 
+void driveBlind( int ticks, float speed ){
+	resetEncoders();
+	driveRaw( speed, 0.0f );
+	while( abs(getEncoder(AVERAGE)) < ticks );
+	stop();
+}
 
 void fram(int tics)
 {
-	resetEncoders();
-	robotSpeed = 0.2f;
-	robotTurn = 0.0f;
-	driveRaw(robotSpeed, robotTurn);
-	while (getEncoder(AVERAGE) < tics) {;}
-	stop();
+	driveBlind( tics, 0.2f );
+	// resetEncoders();
+	// robotSpeed = 0.2f;
+	// robotTurn = 0.0f;
+	// driveRaw(robotSpeed, robotTurn);
+	// while (getEncoder(AVERAGE) < tics) {;}
+	// stop();
 }
 
 void framFast(int tics)
 {
-	resetEncoders();
-	robotSpeed = 0.25f;
-	robotTurn = 0.0f;
-	driveRaw(robotSpeed, robotTurn);
-	while (getEncoder(AVERAGE) < tics) {;}
-	stop();
+	driveBlind( tics, 0.25f );
+	// resetEncoders();
+	// robotSpeed = 0.25f;
+	// robotTurn = 0.0f;
+	// driveRaw(robotSpeed, robotTurn);
+	// while (getEncoder(AVERAGE) < tics) {;}
+	// stop();
 }
 
 void rygg(int tics)
 {
-	resetEncoders();
-	robotSpeed = -0.15f;
-	robotTurn = 0.0f;
-	driveRaw(robotSpeed, robotTurn);
-	while (getEncoder(AVERAGE) > -tics) {;}
-	stop();
+	driveBlind( tics, -0.15f );
+	// resetEncoders();
+	// robotSpeed = -0.15f;
+	// robotTurn = 0.0f;
+	// driveRaw(robotSpeed, robotTurn);
+	// while (getEncoder(AVERAGE) > -tics) {;}
+	// stop();
 }
 
 void ryggFast(int tics)
 {
-	resetEncoders();
-	robotSpeed = -0.25f;
-	robotTurn = 0.0f;
-	driveRaw(robotSpeed, robotTurn);
-	while (getEncoder(AVERAGE) > -tics) {;}
-	stop();
+	driveBlind( tics, -0.25f );
+	// resetEncoders();
+	// robotSpeed = -0.25f;
+	// robotTurn = 0.0f;
+	// driveRaw(robotSpeed, robotTurn);
+	// while (getEncoder(AVERAGE) > -tics) {;}
+	// stop();
 }
 
 void turn(int side, int tics)
@@ -219,7 +232,24 @@ void ryggToDistance(int sensor, int value)
 	stop();
 }
 
+void waitUntilPathClear( int threshold ){
+	for( int counter = 0; counter < 10; counter++ ){
+		if( getDistance(FRONT) < threshold )
+			counter++;
+		else
+			counter=0;
+	}
+}
 
+void waitUntilPathBlocked( int threshold ){
+
+	for( int counter = 0; counter < 10; counter++ ){
+		if( getDistance(FRONT) > threshold )
+			counter++;
+		else
+			counter=0;
+	}
+}
 
 /*
 void safeLostLine()

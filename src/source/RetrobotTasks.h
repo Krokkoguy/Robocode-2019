@@ -100,7 +100,7 @@ void taskOpprampe()
 
 void taskTrapptilMal()
 {
-	
+
 	driveFollowLine(42000, SPEED_SLOW);
 	stop();
 	OSWait(100);
@@ -122,7 +122,7 @@ void taskOpptrapp()
 {
 //	armDown();
 //	OSWait(100);
-	driveRaw(-0.5f, 0.0f);	
+	driveRaw(-0.5f, 0.0f);
 	OSWait(100);
 	armDown();
 	OSWait(100);
@@ -149,26 +149,28 @@ void taskOksport()
 	stop();
 	OSWait(100);
 
+	waitUntilPathBlocked( 200 );
+	waitUntilPathClear(100);
 	//ved oks
-	int i = 0;
-	while(i < 10)
-	{
-		if (getDistance(FRONT) > 200) 
-			i++;
-		else
-			i=0;
-	}
-	
-	i=0;
-	while(i < 10)
-	{
-		if (getDistance(FRONT) < 100) 
-			i++;
-		else
-			i=0;
-	}
-	
-		
+	// int i = 0;
+	// while(i < 10)
+	// {
+	// 	if (getDistance(FRONT) > 200)
+	// 		i++;
+	// 	else
+	// 		i=0;
+	// }
+	//
+	// i=0;
+	// while(i < 10)
+	// {
+	// 	if (getDistance(FRONT) < 100)
+	// 		i++;
+	// 	else
+	// 		i=0;
+	// }
+
+
 	framFast(20000);
 	
 	stop();
